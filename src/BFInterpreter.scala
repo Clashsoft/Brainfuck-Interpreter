@@ -7,12 +7,17 @@ object BFInterpreter {
 	def main(args : Array[String]) : Unit = {
 
 		while (true) {
-			if (args.length > 0) {
-				eval(args(0));
+			try {
+				if (args.length > 0) {
+					eval(args(0));
+				}
+				else {
+					System.out.println("Enter your Brainfuck code");
+					eval(StdIn.readLine());
+				}
 			}
-			else {
-				System.out.println("Enter your Brainfuck code");
-				eval(StdIn.readLine());
+			catch {
+				case t : Throwable => t.printStackTrace()
 			}
 		}
 	}
