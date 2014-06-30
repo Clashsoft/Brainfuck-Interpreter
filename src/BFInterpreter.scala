@@ -1,61 +1,41 @@
 import java.io.InputStreamReader
 import java.io.BufferedReader
+import scala.io.StdIn
 
 object BFInterpreter {
-	var bytes : Array[Int] = null;
-	var index : Int = 0;
 
 	def main(args : Array[String]) : Unit = {
 
 		while (true) {
-			var code : String = null;
-
-			bytes = new Array[Int](30000);
 			if (args.length > 0) {
-				code = args(0);
+				eval(args(0));
 			}
 			else {
-				System.out.println();
 				System.out.println("Enter your Brainfuck code");
-				var reader : BufferedReader = new BufferedReader(new InputStreamReader(System.in));
-				code = reader.readLine();
+				eval(StdIn.readLine());
 			}
-
-			this.eval(code);
 		}
 	}
 
 	def eval(code : String) : Unit = {
 		var i : Int = 0;
-		var c : Char = 0;
-		while (i < code.length()) {
-			c = code.charAt(i);
+		var data : Array[Int] = new Array[Int](30000)
+		var index : Int = 0;
 
-			if (c == '>') {
-				index += 1;
-			}
-			else if (c == '<') {
-				index -= 1;
-			}
-			else if (c == '+') {
-				bytes(index) += 1;
-			}
-			else if (c == '-') {
-				bytes(index) -= 1;
-			}
-			else if (c == ',') {
-				bytes(index) = System.in.read();
-			}
-			else if (c == '.') {
-				System.out.print(bytes(index).asInstanceOf[Char]);
-			}
-			else if (c == '[') {
-				if (bytes(index) == 0) {
+		while (i < code.length()) {
+			var c : Char = code.charAt(i);
+
+			c match {
+				case '>' => index += 1;
+				case '<' => index -= 1;
+				case '+' => data(index) += 1;
+				case '-' => data(index) -= 1;
+				case '.' => println(data(index).asInstanceOf[Char]);
+				case ',' => data(index) = StdIn.readChar();
+				case '[' => if (data(index) == 0) {
 					i = code.indexOf(']');
 				}
-			}
-			else if (c == ']') {
-				if (bytes(index) != 0) {
+				case ']' => if (data(index) != 0) {
 					i = code.lastIndexOf('[');
 				}
 			}
