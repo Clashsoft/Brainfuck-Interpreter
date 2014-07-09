@@ -24,7 +24,7 @@ object BFInterpreter {
 
 	def eval(code : String) : Unit = {
 		var i : Int = 0;
-		var data : Array[Int] = new Array[Int](30000)
+		var data : Array[Int] = new Array[Int](30000);
 		var index : Int = 0;
 
 		while (i < code.length()) {
@@ -37,14 +37,9 @@ object BFInterpreter {
 				case '-' => data(index) -= 1;
 				case '.' => println(data(index).asInstanceOf[Char]);
 				case ',' => data(index) = StdIn.readChar();
-				case '[' => if (data(index) == 0) {
-					i = code.indexOf(']');
-				}
-				case ']' => if (data(index) != 0) {
-					i = code.lastIndexOf('[');
-				}
+				case '[' => if (data(index) == 0) i = code.indexOf(']');
+				case ']' => if (data(index) != 0) i = code.lastIndexOf('[');
 			}
-
 			i += 1;
 		}
 	}
