@@ -1,0 +1,83 @@
+import java.io.InputStreamReader
+import java.io.BufferedReader
+
+public class BFInterpreter
+{
+	public static void main([String] args)
+	{
+		if (args.length > 0)
+		{
+			eval(args[0]);
+		}
+		
+		while (true)
+		{
+			try
+			{
+				println "Enter your Brainfuck code";
+				var line = Console.readLine
+				println line
+				eval line;
+			}
+			catch (Throwable t)
+			{
+				t.printStackTrace
+			}
+		}
+	}
+
+	static void eval(String code)
+	{
+		var i = 0
+		var data = new [int](30000)
+		var index = 0
+
+		while (i < code.length)
+		{
+			var c = code.charAt(i)
+			println c
+
+			c match {
+				case '>' : index += 1
+				case '<' : index -= 1
+				case '+' : data[index] += 1
+				case '-' : data[index] -= 1
+				case '.' : println(data[index] as char)
+				case ',' : data[index] = Console.read(1).charAt(0) as int
+				case '[' : if (data[index] == 0) i = findClosingBracket(code, index) + 1
+				case ']' : if (data[index] != 0) i = findOpeningBracket(code, index) + 1
+			}
+			i += 1;
+		}
+	}
+	
+	static int findClosingBracket(String code, int i) {
+		int depth = 0
+		while (i < code.length) {
+			code.charAt(i) match {
+				case '[': depth += 1
+				case ']': {
+					depth -= 1
+					if (depth == 0) break
+				}
+			}
+			i += 1
+		}
+		return i
+	}
+	
+	static int findOpeningBracket(String code, int i) {
+		int depth = 0
+		while (i < code.length) {
+			code.charAt(i) match {
+				case ']' : depth -= 1
+				case '[' : {
+					depth += 1
+					if (depth == 0) break
+				}
+			}
+			i -= 1
+		}
+		return i
+	}
+}
