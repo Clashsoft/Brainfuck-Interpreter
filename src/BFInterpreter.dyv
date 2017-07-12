@@ -1,0 +1,81 @@
+class BFInterpreter
+{
+	static func main(args: [String]) -> void
+	{
+		if (args.length > 0)
+		{
+			eval(args[0])
+			return
+		}
+		
+		while (true)
+		{
+			try
+			{
+				print 'Enter Brainfuck Code:'
+				let line = Console.readLine()
+				eval line
+			}
+			catch (t: Throwable)
+			{
+				t.printStackTrace
+			}
+		}
+	}
+
+	static func eval(code: String) -> void
+	{
+		var i = 0
+		let data = new [int](30000)
+		var index = 0
+
+		while (i < code.length)
+		{
+			match (code[i])
+			{
+				case '>' => index++
+				case '<' => index--
+				case '+' => data[index]++
+				case '-' => data[index]--
+				case '.' => print(data[index] as char)
+				case ',' => data[index] = Console.read(1).charAt(0) as int
+				case '[' => if (data[index] == 0) i = findClosingBracket(code, index)
+				case ']' => if (data[index] != 0) i = findOpeningBracket(code, index)
+				case _ =>
+			}
+			i += 1
+		}
+	}
+	
+	static func findClosingBracket(code: Sting, i: int) -> int
+	{
+		var depth = 0
+		while (i < code.length)
+		{
+			match (code[i])
+			{
+				case '[' => depth++
+				case ']' => if (--depth == 0) break
+				case _ =>
+			}
+			i += 1
+		}
+		return i
+	}
+	
+	static func findOpeningBracket(code: String, i: int)
+	{
+		var depth = 0
+		while (i >= 0)
+		{
+			match (code[i])
+			{
+				case ']' => depth--
+				case '[' => if (++depth == 0) break
+				case _ =>
+			}
+			i -= 1
+		}
+		return i
+	}
+}
